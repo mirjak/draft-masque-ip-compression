@@ -42,15 +42,15 @@ venue:
   latest: https://example.com/LATEST
 
 author:
- -
+-
     fullname: Mirja Kühlewind
     organization: Ericsson
     email: mirja.kuehlewind@ericsson.com
- -
+-
     fullname: Marcus Ihlar
     organization: Ericsson
     email: marcus.ihlar@ericsson.com
-  -
+-
     fullname: Magnus Westerlund
     organization: Ericsson
     email: magnus.westerlund@ericsson.com
