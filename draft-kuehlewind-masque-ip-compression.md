@@ -19,22 +19,20 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "Extension to Connect-IP for static IP header compression"
+abbrev: "Connect-IP Compression"
 category: info
 
-docname: draft-todo-yourname-protocol-latest
-submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
+docname: draft-kuehlewind-masque-ip-compression-latest
+submissiontype: IETF 
 number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: WIT
+workgroup: MASQUE
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - connect-ip
 venue:
   group: WG
   type: Working Group
@@ -45,26 +43,35 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
+    fullname: Mirja Kühlewind
+    organization: Ericsson
+    email: mirja.kuehlewind@ericsson.com
+ -
+    fullname: Marcus Ihlar
+    organization: Ericsson
+    email: marcus.ihlar@ericsson.com
+  -
+    fullname: Magnus Westerlund
+    organization: Ericsson
+    email: magnus.westerlund@ericsson.com
 
 normative:
 
 informative:
 
-...
 
 --- abstract
 
-TODO Abstract
+This document specifies an extension for IP header compression when using Connect-IP proxying.
 
 
 --- middle
 
 # Introduction
 
-TODO Introduction
+This document specifies an extension for IP header compression when using Connect-IP proxying.
+It specifies a new capsule that provides static information for IP header fields
+that are then left out when using the indicated a context ID.
 
 
 # Conventions and Definitions
