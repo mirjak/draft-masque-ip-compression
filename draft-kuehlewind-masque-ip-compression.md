@@ -4,22 +4,22 @@ abbrev: "Connect-IP Compression"
 category: info
 
 docname: draft-kuehlewind-masque-ip-compression-latest
-submissiontype: IETF 
+submissiontype: IETF
 number:
 date:
 consensus: true
 v: 3
-area: WIT
-workgroup: MASQUE
+area: "Web and Internet Transport"
+workgroup: "Multiplexed Application Substrate over QUIC Encryption"
 keyword:
  - connect-ip
 venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "Multiplexed Application Substrate over QUIC Encryption"
+  type: "Working Group"
+  mail: "masque@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/masque/"
+  github: "mirjak/draft-masque-ip-compression"
+  latest: "https://mirjak.github.io/draft-masque-ip-compression/draft-kuehlewind-masque-ip-compression.html"
 
 author:
 -
