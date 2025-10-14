@@ -268,8 +268,37 @@ TODO Security
 
 # IANA Considerations
 
-This document has no IANA actions.
+# IANA Considerations
 
+This document will request IANA to register the following new items to the
+"HTTP Capsule Types" registry maintained at
+<[](https://www.iana.org/assignments/masque)>:
+
+| Value |      Capsule Type      |
+|:------|:-----------------------|
+|  TBD  | IP4_COMPRESSION_ASSIGN |
+|  TBD  | IP6_COMPRESSION_ASSIGN |
+|  TBD  | IP_COMPRESSION_ACK     |
+|  TBD  | IP_COMPRESSION_CLOSE   |
+{: #iana-capsules-table title="New Capsules"}
+
+All of these new entries use the following values for these fields:
+
+Status:
+: provisional (permanent if this document is approved)
+
+Reference:
+: This document
+
+Change Controller:
+: IETF
+
+Contact:
+: MASQUE Working Group <masque@ietf.org>
+
+Notes:
+: None
+{: spacing="compact"}
 
 --- back
 
