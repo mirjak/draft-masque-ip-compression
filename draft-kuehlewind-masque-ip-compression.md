@@ -94,7 +94,7 @@ IP4_COMPRESSION_ASSIGN Capsule {
 It contains the following fields:
 
 IHL:
-: The value Internet Header Length field of the IP header. The value MUST be between 5 and 15. 
+: The value Internet Header Length field of the IP header. The value MUST be between 5 and 15.
   Capules with other values MUST be considered malformed.
 
 DHCP:
