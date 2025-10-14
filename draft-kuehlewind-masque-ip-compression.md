@@ -49,12 +49,14 @@ This document specifies an extension for IP header compression when using Connec
 
 # Introduction
 
-This document specifies an extension for IP header compression when using Connect-IP proxying.
-It specifies a new capsule that provides static information for IP header fields
+This document specifies an extension for IP header compression when using Connect-IP
+{{!CONNECT-IP=RFC9484}} proxying.
+It specifies a way to provides static information for IP header fields
 that are then left out when using the indicated a context ID.
 
 This document defines four new capsules to assign new context IDs and provide static information
 in IPv4 and IPv6 headers, acknowlegde the use of such a context ID, or cancel its use.
+The capsules MUST only be used with Connect-IP {{CONNECT-IP}}.
 
 # Conventions and Definitions
 
@@ -196,7 +198,7 @@ capsule, it MUST either accept or reject the corresponding registration:
   COMPRESSION_CLOSE capsule with the Context ID set to the one from the
   received IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule.
 
-As mandated in {{Section 4 of CONNECT-UDP}}, clients can only allocate even
+As mandated in {{Section 4 of !CONNECT-UDP=RFC9298}}, clients can only allocate even
 Context IDs, while proxies can only allocate odd ones. This makes the
 registration capsules from this document unambiguous. For example, if a
 client receives a COMPRESSION_ASSIGN capsule with an even Context ID, that
