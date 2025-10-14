@@ -1,0 +1,349 @@
+
+
+
+
+Multiplexed Application Substrate over QUIC Encryption      M. Kühlewind
+Internet-Draft                                                  M. Ihlar
+Intended status: Informational                             M. Westerlund
+Expires: 17 April 2026                                          Ericsson
+                                                         14 October 2025
+
+
+        Extension to Connect-IP for static IP header compression
+             draft-kuehlewind-masque-ip-compression-latest
+
+Abstract
+
+   This document specifies an extension for IP header compression when
+   using Connect-IP proxying.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://mirjak.github.io/draft-masque-ip-compression/draft-
+   kuehlewind-masque-ip-compression.html.  Status information for this
+   document may be found at https://datatracker.ietf.org/doc/draft-
+   kuehlewind-masque-ip-compression/.
+
+   Discussion of this document takes place on the Multiplexed
+   Application Substrate over QUIC Encryption Working Group mailing list
+   (mailto:masque@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/masque/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/masque/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/mirjak/draft-masque-ip-compression.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 17 April 2026.
+
+Copyright Notice
+
+   Copyright (c) 2025 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+     2.1.  IP4_COMPRESSION_ASSIGN and IP6_COMPRESSION_ASSIGN capsules
+     2.2.  IP_COMPRESSION_ACK capsule
+     2.3.  IP_COMPRESSION_CLOSE capsule
+   3.  Security Considerations
+   4.  IANA Considerations
+   5.  Normative References
+   Acknowledgments
+   Authors' Addresses
+
+1.  Introduction
+
+   This document specifies an extension for IP header compression when
+   using Connect-IP [CONNECT-IP] proxying.  It specifies a way to
+   provides static information for IP header fields that are then left
+   out when using the indicated a context ID.
+
+   This document defines four new capsules to assign new context IDs and
+   provide static information in IPv4 and IPv6 headers, acknowlegde the
+   use of such a context ID, or cancel its use.  The capsules MUST only
+   be used with Connect-IP [CONNECT-IP].
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+2.1.  IP4_COMPRESSION_ASSIGN and IP6_COMPRESSION_ASSIGN capsules
+
+   The IPv4 Compression Assign capsule (capsule type TBD) is used to
+   register a Context ID and provides static values of the IP header
+   fields that will be removed from the HTTP Datagram Payload when using
+   this Conext ID.  It has the following format:
+
+   IP4_COMPRESSION_ASSIGN Capsule {
+     Type (i) = TBD,
+     Length (i),
+     Context ID (i),
+     [IHL (4)],
+     [DSCP (6)],
+     [ECN (2)],
+     [Omit Length (1)],
+     [ID (16)],
+     [Reserved (1)],
+     [DF (1)],
+     [MF (1)],
+     [Fragment Offset (13)],
+     [TTL (8)],
+     [Protocol (8)],
+     [Checksum (1)],
+     [Source Address (32)],
+     [Destination Address (32)]
+   }
+
+              Figure 1: IPv4 Compression Assign Capsule Format
+
+   It contains the following fields:
+
+   IHL:  The value Internet Header Length field of the IP header.  The
+      value MUST be between 5 and 15.  Capules with other values MUST be
+      considered malformed.
+
+   DHCP:  The value of DiffServ Code Point field of the IP header.
+
+   ECN:  The value of ECN codepoint field of the IP header.
+
+   Omit Length:  An indication that the Total length field of the IP
+      header is omitted.  If omitted in the payload, the receiver need
+      to calulate the Total length after reconstructing the IP header.
+
+   ID:  The value of the Identification of the IP header.
+
+   Reserved:  The value of the Reserved flag of the IP header.
+
+   DF:  The value of the Don't Fragment flag of the IP header.
+
+   MF:  The value of the More Fragments flag of the IP header.
+
+   Fragment Offset:  The value of the Fragment Offset field of the IP
+      header.
+
+   TTL:  The value of the TTL field of the IP header.
+
+   Protocol:  The value of the Protocol field of the IP header
+
+   Omit Checksum:  An indication that the Checksum field of the IP
+      header is omitted.  If omitted in the payload, the receiver need
+      to calulate the checksum after reconstructing the IP header.
+
+   Source Address:  The IP Source Address of the IP header used in this
+      context.  This address MUST be a registered address.  Capules with
+      other values MUST be considered malformed.
+
+   Destination Address:  The IP Destination Address of the IP header
+      used in this context.  This address MUST be a registered address.
+      Capules with other values MUST be considered malformed.
+
+   IP6_COMPRESSION_ASSIGN Capsule {
+     Type (i) = TBD,
+     Length (i),
+     Context ID (i),
+     [Traffic class (8)],
+     [Flow label (20)],
+     [Omit Payload Length (1)],
+     [Next header (8)],
+     [Hop limit (8)],
+     [Source Address (128)],
+     [Destination Address (128)]
+   }
+
+              Figure 2: IPv6 Compression Assign Capsule Format
+
+   It contains the following fields:
+
+   Traffic Class:  The value of the Traffic Class field of the IP
+      header.
+
+   Flow Label:  The value of the Flow Label field of the IP header.
+
+   Omit Payload Length:  An indication that the Payload length field of
+      the IP header is omitted.  If omitted in the payload, the receiver
+      need to calulate the Total length after reconstructing the IP
+      header.
+
+   Next Header:  The value of the Next Header field of the IP header.
+
+   Hop Limit:  The value of the Hop Limit field of the IP header.
+
+   Source Address:  The IP Source Address of the IP header used in this
+      context.  This address MUST be a registered address.  Capules with
+      other values MUST be considered malformed.
+
+   Destination Address:  The IP Destination Address of the IP header
+      used in this context.  This address MUST be a registered address.
+      Capules with other values MUST be considered malformed.
+
+   When the indicated Context ID is used all IP header fields that are
+   provided with a static value in the capsule as well as the version
+   field MUST be omitted in the HTTP datagram payload and the receiver
+   of the datagram with the indicated Context ID MUST reconstruct the IP
+   accordingly before forwarding the payload.
+
+   When an endpoint receives a IP4_COMPRESSION_ASSIGN or
+   IP6_COMPRESSION_ASSIGN capsule, it MUST either accept or reject the
+   corresponding registration:
+
+   *  if it accepts the registration, the receiver MUST return a
+      COMPRESSION_ACK capsule with the Context ID set to the one from
+      the received IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN
+      capsule back to its peer
+
+   *  if it rejects the registration, the receiver MUST respond by
+      sending a COMPRESSION_CLOSE capsule with the Context ID set to the
+      one from the received IP4_COMPRESSION_ASSIGN or
+      IP6_COMPRESSION_ASSIGN capsule.
+
+   As mandated in Section 4 of [CONNECT-UDP], clients can only allocate
+   even Context IDs, while proxies can only allocate odd ones.  This
+   makes the registration capsules from this document unambiguous.  For
+   example, if a client receives a COMPRESSION_ASSIGN capsule with an
+   even Context ID, that has to be an echo of a capsule that the client
+   initially sent, indicating that the proxy accepted the registration.
+   Since the value 0 was reserved by unextended connect-udp, the Context
+   ID value of COMPRESSION_ASSIGN can never be zero.
+
+   Endpoints MUST NOT send two COMPRESSION_ASSIGN capsules with the same
+   Context ID.  If a recipient detects a repeated Context ID, it MUST
+   treat the capsule as malformed.  Receipt of a malformed capsule MUST
+   be treated as an error processing the Capsule Protocol, as defined in
+   Section 3.3 of [HTTP-DGRAM].
+
+   Endpoints MAY pre-emptively use Context IDs not yet acknowledged by
+   the peer via COMPRESSION_ACK, knowing that those HTTP Datagrams can
+   be dropped if they arrive before the corresponding
+   IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule, or if the
+   peer rejects the registration.
+
+2.2.  IP_COMPRESSION_ACK capsule
+
+   The IP Compression Acknowledgment capsule (capsule type TBD) confirms
+   registration of a context ID that was received in an
+   IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule.
+
+   IP_COMPRESSION_ACK Capsule {
+     Type (i) = TBD,
+     Length (i),
+     Context ID (i),
+   }
+
+           Figure 3: IP Compression Acknowledgment Capsule Format
+
+   An endpoint can only send a COMPRESSION_ACK capsule if it received a
+   IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule with the
+   same Context ID.  If an endpoint receives COMPRESSION_ACK capsule for
+   a context ID it did not attempt to register in an
+   IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule, that
+   capsule is considered malformed.
+
+2.3.  IP_COMPRESSION_CLOSE capsule
+
+   The IP Compression Close capsule (capsule type TDB) serves two
+   purposes.  It can be sent as a direct response to a received
+   IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule capsule, to
+   indicate that the registration was rejected.  It can also be sent
+   later to indicate the closure of a previously assigned registration.
+
+   IP_COMPRESSION_CLOSE Capsule {
+     Type (i) = TBD,
+     Length (i),
+     Context ID (i),
+   }
+
+               Figure 4: IP Compression Close Capsule Format
+
+   Once an endpoint has either sent or received a IP_COMPRESSION_CLOSE
+   for a given Context ID, it MUST NOT send any further datagrams with
+   that Context ID.  Since the value 0 was reserved by unextended
+   connect-udp, the Context ID value of IP_COMPRESSION_CLOSE can never
+   be zero.
+
+3.  Security Considerations
+
+   TODO Security
+
+4.  IANA Considerations
+
+   This document has no IANA actions.
+
+5.  Normative References
+
+   [CONNECT-IP]
+              Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
+              Kühlewind, M., and M. Westerlund, "Proxying IP in HTTP",
+              RFC 9484, DOI 10.17487/RFC9484, October 2023,
+              <https://www.rfc-editor.org/rfc/rfc9484>.
+
+   [CONNECT-UDP]
+              Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
+              DOI 10.17487/RFC9298, August 2022,
+              <https://www.rfc-editor.org/rfc/rfc9298>.
+
+   [HTTP-DGRAM]
+              Schinazi, D. and L. Pardue, "HTTP Datagrams and the
+              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
+              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Authors' Addresses
+
+   Mirja Kühlewind
+   Ericsson
+   Email: mirja.kuehlewind@ericsson.com
+
+
+   Marcus Ihlar
+   Ericsson
+   Email: marcus.ihlar@ericsson.com
+
+
+   Magnus Westerlund
+   Ericsson
+   Email: magnus.westerlund@ericsson.com
