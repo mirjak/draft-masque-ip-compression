@@ -76,7 +76,8 @@ Table of Contents
      2.3.  IP_COMPRESSION_CLOSE capsule
    3.  Security Considerations
    4.  IANA Considerations
-   5.  Normative References
+   5.  IANA Considerations
+   6.  Normative References
    Acknowledgments
    Authors' Addresses
 
@@ -299,9 +300,36 @@ Table of Contents
 
 4.  IANA Considerations
 
-   This document has no IANA actions.
+5.  IANA Considerations
 
-5.  Normative References
+   This document will request IANA to register the following new items
+   to the "HTTP Capsule Types" registry maintained at
+   <https://www.iana.org/assignments/masque>:
+
+                    +=======+========================+
+                    | Value | Capsule Type           |
+                    +=======+========================+
+                    | TBD   | IP4_COMPRESSION_ASSIGN |
+                    +-------+------------------------+
+                    | TBD   | IP6_COMPRESSION_ASSIGN |
+                    +-------+------------------------+
+                    | TBD   | IP_COMPRESSION_ACK     |
+                    +-------+------------------------+
+                    | TBD   | IP_COMPRESSION_CLOSE   |
+                    +-------+------------------------+
+
+                          Table 1: New Capsules
+
+   All of these new entries use the following values for these fields:
+
+   Status:  provisional (permanent if this document is approved)
+   Reference:  This document
+   Change Controller:  IETF
+   Contact:  MASQUE Working Group masque@ietf.org
+      (mailto:masque@ietf.org)
+   Notes:  None
+
+6.  Normative References
 
    [CONNECT-IP]
               Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
