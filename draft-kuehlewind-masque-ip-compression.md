@@ -89,7 +89,7 @@ IP4_COMPRESSION_ASSIGN Capsule {
   [Destination Address (32)]
 }
 ~~~
-{: #fmt-capsule-assign title="IPv4 Compression Assign Capsule Format"}
+{: #fig-capsule-ipv4-assign title="IPv4 Compression Assign Capsule Format"}
 
 It contains the following fields:
 
@@ -154,7 +154,7 @@ IP6_COMPRESSION_ASSIGN Capsule {
   [Destination Address (128)]
 }
 ~~~
-{: #fmt-capsule-assign title="IPv4 Compression Assign Capsule Format"}
+{: #fig-capsule-ipv6-assign title="IPv6 Compression Assign Capsule Format"}
 
 It contains the following fields:
 
@@ -231,7 +231,7 @@ IP_COMPRESSION_ACK Capsule {
   Context ID (i),
 }
 ~~~
-{: #fmt-capsule-ack title="IP Compression Acknowledgment Capsule Format"}
+{: #fig-capsule-ack title="IP Compression Acknowledgment Capsule Format"}
 
 An endpoint can only send a COMPRESSION_ACK capsule if it received a
 IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule with the same Context ID.
@@ -254,7 +254,7 @@ IP_COMPRESSION_CLOSE Capsule {
   Context ID (i),
 }
 ~~~
-{: #fmt-capsule-close title="IP Compression Close Capsule Format"}
+{: #fig-capsule-close title="IP Compression Close Capsule Format"}
 
 Once an endpoint has either sent or received a IP_COMPRESSION_CLOSE for a given
 Context ID, it MUST NOT send any further datagrams with that Context ID.
