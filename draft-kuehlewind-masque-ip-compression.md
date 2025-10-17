@@ -84,7 +84,7 @@ IP4_COMPRESSION_ASSIGN Capsule {
   [Fragment Offset (13)],
   [TTL (8)],
   [Protocol (8)],
-  [Checksum (1)],
+  [Omit Checksum (1)],
   [Source Address (32)],
   [Destination Address (32)]
 }
