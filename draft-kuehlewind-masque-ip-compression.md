@@ -98,16 +98,16 @@ IP4_COMPRESSION_ASSIGN Capsule {
 It contains the following fields:
 
 IHL:
-: This flag indicates if Internet Header Length field of the IP header is static.
+: This flag indicates if the Internet Header Length field of the IP header is static.
 
 DHCP:
-: This flag indicates if DiffServ Code Point field of the IP header is static.
+: This flag indicates if the DiffServ Code Point field of the IP header is static.
 
 ECN:
-: This flag indicates if ECN codepoint field of the IP header is static.
+: This flag indicates if the ECN codepoint field of the IP header is static.
 
 Total Length:
-: This flag indicates if Total length field of the IP header is static.
+: This flag indicates if the Total length field of the IP header is static.
 
 ID:
 : This flag indicates if the Identification field of the IP header is static.
@@ -131,7 +131,7 @@ Protocol:
 : This flag indicates if the Protocol field of the IP header  is static.
 
 Checksum:
-: This flag indicates if  Checksum field of the IP header is static.
+: This flag indicates if the Checksum field of the IP header is static.
 
 Source Address:
 : This flag indicates if the IP Source Address of the IP header is static.
@@ -185,7 +185,7 @@ Payload Length:
 : This flag indicates if the Payload length field of the IP header is static.
 
 Next Header:
-: This flag indicates if The value of the Next Header field of the IP header is static.
+: This flag indicates if the value of the Next Header field of the IP header is static.
 
 Hop Limit:
 : This flag indicates if the Hop Limit field of the IP header is static.
