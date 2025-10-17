@@ -147,7 +147,7 @@ Destination Port:
 
 IPv4 Header:
 : This field contains the first 20 bytes of the IPv4 header. Fields that are not indicated as static will be omitted
-  in the compression and therefore their value is not relevant.  
+  in the compression and therefore their value is not relevant.
 
 Transport Ports:
 : If either the Source Port or Destination Port Flag is set, this field has to be present and contains
@@ -204,7 +204,7 @@ Destination Port:
 
 IPv6 Header:
 : This field contains the first 40 bytes of the IPv6 header. Fields that are not indicated as static will be omitted
-  in the compression and therefore their value is not relevant.  
+  in the compression and therefore their value is not relevant.
 
 Transport Ports:
 : If either the Source Port or Destination Port Flag is set, this field has to be present and contains
