@@ -5,8 +5,8 @@
 Multiplexed Application Substrate over QUIC Encryption      M. Kühlewind
 Internet-Draft                                                  M. Ihlar
 Intended status: Informational                             M. Westerlund
-Expires: 17 April 2026                                          Ericsson
-                                                         14 October 2025
+Expires: 20 April 2026                                          Ericsson
+                                                         17 October 2025
 
 
         Extension to Connect-IP for static IP header compression
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 April 2026.
+   This Internet-Draft will expire on 20 April 2026.
 
 Copyright Notice
 
@@ -123,7 +123,7 @@ Table of Contents
      [Fragment Offset (13)],
      [TTL (8)],
      [Protocol (8)],
-     [Checksum (1)],
+     [Omit Checksum (1)],
      [Source Address (32)],
      [Destination Address (32)]
    }
