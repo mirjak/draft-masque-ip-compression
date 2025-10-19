@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-16T01:54:07.863668+00:00",
+  "timestamp": "2025-10-19T02:05:47.329254+00:00",
   "repo": "mirjak/draft-masque-ip-compression",
   "labels": [
     {
@@ -50,5 +50,34 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOQBkb9c6uS534",
+      "title": "Revise IP4_COMPRESSION_ASSIGN Capsule fields",
+      "url": "https://github.com/mirjak/draft-masque-ip-compression/pull/1",
+      "state": "MERGED",
+      "author": "mirjak",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-10-17T11:59:21Z",
+      "updatedAt": "2025-10-17T15:31:50Z",
+      "baseRepository": "mirjak/draft-masque-ip-compression",
+      "baseRefName": "main",
+      "baseRefOid": "8eafb24d7124da9ce11b5c9a9e3eb8dab5c77384",
+      "headRepository": "mirjak/draft-masque-ip-compression",
+      "headRefName": "mirjak-patch-1",
+      "headRefOid": "e579ffea650684efc6ec4fb0f81344513a378e8e",
+      "closedAt": "2025-10-17T15:31:50Z",
+      "mergedAt": "2025-10-17T15:31:50Z",
+      "mergedBy": "mirjak",
+      "mergeCommit": {
+        "oid": "2061ee969c0647211b8857f8d60a232b02847028"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
