@@ -51,8 +51,8 @@ This document specifies an extension for IP header compression when using Connec
 
 This document specifies an extension for IP header compression when using Connect-IP
 {{!CONNECT-IP=RFC9484}} proxying.
-It specifies a way to provides static information for IP header fields
-that are then left out when using the indicated a context ID.
+It specifies a way to indicate which IP header fields can be omitted
+and provides reference values that are then used to reconstruct omitted fields when using the indicated context ID.
 
 This document defines four new capsules to assign new context IDs and provide static information
 in IPv4 and IPv6 headers, acknowlegde the use of such a context ID, or cancel its use.
@@ -65,155 +65,155 @@ The capsules MUST only be used with Connect-IP {{CONNECT-IP}}.
 ## IP4_COMPRESSION_ASSIGN and IP6_COMPRESSION_ASSIGN capsules {#capsule-assign}
 
 The IPv4 Compression Assign capsule (capsule type TBD) is used to register a
-Context ID and provides static values of the IP header fields that will be removed from the
-HTTP Datagram Payload when using this Conext ID. It has the following format:
+Context ID and provides reference values of the IP header fields that will be omitted from the
+HTTP Datagram Payload when using this Context ID. It has the following format:
 
 ~~~
 IP4_COMPRESSION_ASSIGN Capsule {
   Type (i) = TBD,
   Length (i),
   Context ID (i),
-  IHL (1),
-  DSCP (1),
-  ECN (1),
-  ID (1),
-  Total Length (1),
-  Reserved (1),
-  DF (1),
-  MF (1),
-  Fragment Offset (1),
-  TTL (1),
-  Protocol (1),
-  Checksum (1),
-  Source Address (1),
-  Destination Address (1),
-  Source Port (1),
-  Destination Port (1),
-  IPv4 Header (20),
-  [Transport Ports (16)]
+  IPv4 Flags (16),
+  IPv4 Header (20)
 }
 ~~~
 {: #fig-capsule-ipv4-assign title="IPv4 Compression Assign Capsule Format"}
 
 It contains the following fields:
 
-IHL:
-: This flag indicates if the Internet Header Length field of the IP header is static.
-
-DHCP:
-: This flag indicates if the DiffServ Code Point field of the IP header is static.
-
-ECN:
-: This flag indicates if the ECN codepoint field of the IP header is static.
-
-Total Length:
-: This flag indicates if the Total length field of the IP header is static.
-
-ID:
-: This flag indicates if the Identification field of the IP header is static.
-
-Reserved:
-: This flag indicates if the Reserved flag of the IP header is static.
-
-DF:
-: This flag indicates if the Don't Fragment flag of the IP header is static.
-
-MF:
-: This flag indicates if the More Fragments flag of the IP header is static.
-
-Fragment Offset:
-: This flag indicates if the Fragment Offset field of the IP header is static.
-
-TTL:
-: This flag indicates if the TTL field of the IP header is static.
-
-Protocol:
-: This flag indicates if the Protocol field of the IP header  is static.
-
-Checksum:
-: This flag indicates if the Checksum field of the IP header is static.
-
-Source Address:
-: This flag indicates if the IP Source Address of the IP header is static.
-
-Destination Address:
-: This flag indicates if the IP Destination Address of the IP header is static.
-
-Source Port:
-: This flag indicates if the Source Port of the header that follows the IP header is static.
-
-Destination Port:
-: This flag indicates if the Destination Port of the header that follows the IP header is static.
+IPv4 Flags:
+: A 16-bit field containing flags that indicate which byte-aligned IP header fields can be omitted.
+  The format is defined in {{fig-ipv4-flags}}.
 
 IPv4 Header:
-: This field contains the first 20 bytes of the IPv4 header. Fields that are not indicated as static will be omitted
-  in the compression and therefore their value is not relevant.
+: This field contains the first 20 bytes of the IPv4 header. Fields that are not indicated as omitted will be
+  included in the compressed packet and therefore their reference value is not relevant.
 
-Transport Ports:
-: If either the Source Port or Destination Port Flag is set, this field has to be present and contains
-  one byte for the source port followed by one byte for the destionation port.
+The IPv4 Flags field has the following format:
+
+~~~
+IPv4 Flags {
+  Version-IHL (1),
+  DSCP-ECN (1),
+  Total Length (1),
+  Identification (1),
+  Flags-FragOffset (1),
+  TTL (1),
+  Protocol (1),
+  Checksum (1),
+  Source Address (1),
+  Destination Address (1),
+  Reserved (6),
+}
+~~~
+{: #fig-ipv4-flags title="IPv4 Flags Format"}
+
+The flags have the following meanings:
+
+Version-IHL:
+: This flag indicates if byte 0 of the IPv4 header (Version and IHL fields) can be omitted.
+
+DSCP-ECN:
+: This flag indicates if byte 1 of the IPv4 header (DSCP and ECN fields) can be omitted.
+
+Total Length:
+: This flag indicates if bytes 2-3 of the IPv4 header (Total Length field) can be omitted (receiver will compute from payload size).
+
+Identification:
+: This flag indicates if bytes 4-5 of the IPv4 header (Identification field) can be omitted.
+
+Flags-FragOffset:
+: This flag indicates if bytes 6-7 of the IPv4 header (Flags and Fragment Offset fields) can be omitted.
+
+TTL:
+: This flag indicates if byte 8 of the IPv4 header (TTL field) can be omitted.
+
+Protocol:
+: This flag indicates if byte 9 of the IPv4 header (Protocol field) can be omitted.
+
+Checksum:
+: This flag indicates if bytes 10-11 of the IPv4 header (Header Checksum field) can be omitted (receiver will recompute).
+
+Source Address:
+: This flag indicates if bytes 12-15 of the IPv4 header (Source Address field) can be omitted.
+
+Destination Address:
+: This flag indicates if bytes 16-19 of the IPv4 header (Destination Address field) can be omitted.
+
+Reserved:
+: These bits are reserved for future use and MUST be set to zero.
 
 ~~~
 IP6_COMPRESSION_ASSIGN Capsule {
   Type (i) = TBD,
   Length (i),
   Context ID (i),
-  Traffic class (1),
-  Flow label (1),
-  Payload Length (1),
-  Next header (1),
-  Hop limit (1),
-  Source Address (1),
-  Destination Address (1),
-  Source Port (1),
-  Destination Port (1),
-  IPv6 Header (40),
-  [Transport Ports (16)]
+  IPv6 Flags (16),
+  IPv6 Header (40)
 }
 ~~~
 {: #fig-capsule-ipv6-assign title="IPv6 Compression Assign Capsule Format"}
 
 It contains the following fields:
 
-Traffic Class:
-: This flag indicates if the Traffic Class field of the IP header is static.
-
-Flow Label:
-: This flag indicates if the Flow Label field of the IP header is static.
-
-Payload Length:
-: This flag indicates if the Payload length field of the IP header is static.
-
-Next Header:
-: This flag indicates if the value of the Next Header field of the IP header is static.
-
-Hop Limit:
-: This flag indicates if the Hop Limit field of the IP header is static.
-
-Source Address:
-: This flag indicates if the IP Source Address of the IP header is static.
-
-Destination Address:
-: This flag indicates if the IP Destination Address of the IP header is static.
-
-Source Port:
-: This flag indicates if the Source Port of the header that follows the IP header is static.
-
-Destination Port:
-: This flag indicates if the Destination Port of the header that follows the IP header is static.
+IPv6 Flags:
+: A 16-bit field containing flags that indicate which byte-aligned IP header fields can be omitted.
+  The format is defined in {{fig-ipv6-flags}}.
 
 IPv6 Header:
-: This field contains the first 40 bytes of the IPv6 header. Fields that are not indicated as static will be omitted
-  in the compression and therefore their value is not relevant.
+: This field contains the first 40 bytes of the IPv6 header. Fields that are not indicated as omitted will be
+  included in the compressed packet and therefore their reference value is not relevant.
 
-Transport Ports:
-: If either the Source Port or Destination Port Flag is set, this field has to be present and contains
-  one byte for the source port followed by one byte for the destionation port.
+The IPv6 Flags field has the following format:
 
-When the indicated Context ID is used all IP header fields that indicated as static
-as well as the version field MUST be omitted in the HTTP datagram payload and the receiver of the
-datagram with the indicated Context ID MUST reconstruct the IP header accordingly before forwarding
-the payload.
+~~~
+IPv6 Flags {
+  Version-FL (1),
+  Traffic Class (1),
+  Payload Length (1),
+  Next Header (1),
+  Hop Limit (1),
+  Source Address (1),
+  Destination Address (1),
+  Reserved (9),
+}
+~~~
+{: #fig-ipv6-flags title="IPv6 Flags Format"}
+
+The flags have the following meanings:
+
+Version-FL:
+: This flag indicates if the Version field (upper 4 bits of byte 0) and Flow Label field (lower 4 bits of byte 1, and all of bytes 2-3) can be omitted.
+  When this flag is set but the Traffic Class flag is not set, the Traffic Class field (lower 4 bits of byte 0 and upper 4 bits of byte 1) MUST be preserved
+  as a single byte in the compressed packet.
+
+Traffic Class:
+: This flag indicates if the Traffic Class field (lower 4 bits of byte 0 and upper 4 bits of byte 1) can be omitted.
+  This flag can be set independently of the Version-FL flag to allow omitting Version and Flow Label while preserving Traffic Class.
+
+Payload Length:
+: This flag indicates if bytes 4-5 of the IPv6 header (Payload Length field) can be omitted (receiver will compute from payload size).
+
+Next Header:
+: This flag indicates if byte 6 of the IPv6 header (Next Header field) can be omitted.
+
+Hop Limit:
+: This flag indicates if byte 7 of the IPv6 header (Hop Limit field) can be omitted.
+
+Source Address:
+: This flag indicates if bytes 8-23 of the IPv6 header (Source Address field) can be omitted.
+
+Destination Address:
+: This flag indicates if bytes 24-39 of the IPv6 header (Destination Address field) can be omitted.
+
+Reserved:
+: These bits are reserved for future use and MUST be set to zero.
+
+When the indicated Context ID is used, all IP header fields that are flagged as omitted
+as well as the version field MUST be omitted from the HTTP datagram payload. The receiver of the
+datagram with the indicated Context ID MUST reconstruct the complete IP header using the reference
+values from the COMPRESSION_ASSIGN capsule and/or by computing derived values (such as checksums
+and length fields) before forwarding the payload.
 
 When an endpoint receives a IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN
 capsule, it MUST either accept or reject the corresponding registration:
