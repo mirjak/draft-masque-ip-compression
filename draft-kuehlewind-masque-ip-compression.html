@@ -11,22 +11,21 @@
 <meta content="
        This document specifies an extension for IP header compression when using Connect-IP proxying. 
     " name="description">
-<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="connect-ip" name="keyword">
 <meta content="draft-kuehlewind-masque-ip-compression-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.2
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.4.0
+    platformdirs 4.5.0
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.5
-    setuptools 80.9.0
     wcwidth 0.2.14
 -->
 <link href="draft-kuehlewind-masque-ip-compression.xml" rel="alternate" type="application/rfc+xml">
@@ -1050,7 +1049,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kühlewind, et al.</td>
-<td class="center">Expires 20 April 2026</td>
+<td class="center">Expires 23 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1062,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-kuehlewind-masque-ip-compression-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-17" class="published">17 October 2025</time>
+<time datetime="2025-10-20" class="published">20 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-20">20 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-23">23 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1126,7 +1125,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1201,8 +1200,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-1-1">This document specifies an extension for IP header compression when using Connect-IP
 <span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span> proxying.
-It specifies a way to provides static information for IP header fields
-that are then left out when using the indicated a context ID.<a href="#section-1-1" class="pilcrow">¶</a></p>
+It specifies a way to indicate which IP header fields can be omitted
+and provides reference values that are then used to reconstruct omitted fields when using the indicated context ID.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">This document defines four new capsules to assign new context IDs and provide static information
 in IPv4 and IPv6 headers, acknowlegde the use of such a context ID, or cancel its use.
 The capsules <span class="bcp14">MUST</span> only be used with Connect-IP <span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
@@ -1223,8 +1222,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-ip4_compression_assign-and-" class="section-name selfRef">IP4_COMPRESSION_ASSIGN and IP6_COMPRESSION_ASSIGN capsules</a>
         </h3>
 <p id="section-2.1-1">The IPv4 Compression Assign capsule (capsule type TBD) is used to register a
-Context ID and provides static values of the IP header fields that will be removed from the
-HTTP Datagram Payload when using this Conext ID. It has the following format:<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+Context ID and provides reference values of the IP header fields that will be omitted from the
+HTTP Datagram Payload when using this Context ID. It has the following format:<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <span id="name-ipv4-compression-assign-cap"></span><div id="fig-capsule-ipv4-assign">
 <figure id="figure-1">
           <div class="alignLeft art-text artwork" id="section-2.1-2.1">
@@ -1233,24 +1232,8 @@ IP4_COMPRESSION_ASSIGN Capsule {
   Type (i) = TBD,
   Length (i),
   Context ID (i),
-  IHL (1),
-  DSCP (1),
-  ECN (1),
-  ID (1),
-  Total Length (1),
-  Reserved (1),
-  DF (1),
-  MF (1),
-  Fragment Offset (1),
-  TTL (1),
-  Protocol (1),
-  Checksum (1),
-  Source Address (1),
-  Destination Address (1),
-  Source Port (1),
-  Destination Port (1),
-  IPv4 Header (20),
-  [Transport Ports (16)]
+  IPv4 Flags (16),
+  IPv4 Header (20)
 }
 </pre>
 </div>
@@ -1260,219 +1243,235 @@ IP4_COMPRESSION_ASSIGN Capsule {
 </div>
 <p id="section-2.1-3">It contains the following fields:<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-2.1-4">
-          <dt id="section-2.1-4.1">IHL:</dt>
+          <dt id="section-2.1-4.1">IPv4 Flags:</dt>
           <dd style="margin-left: 1.5em" id="section-2.1-4.2">
-            <p id="section-2.1-4.2.1">This flag indicates if the Internet Header Length field of the IP header is static.<a href="#section-2.1-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-4.2.1">A 16-bit field containing flags that indicate which byte-aligned IP header fields can be omitted.
+The format is defined in <a href="#fig-ipv4-flags" class="auto internal xref">Figure 2</a>.<a href="#section-2.1-4.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.3">DHCP:</dt>
+<dt id="section-2.1-4.3">IPv4 Header:</dt>
           <dd style="margin-left: 1.5em" id="section-2.1-4.4">
-            <p id="section-2.1-4.4.1">This flag indicates if the DiffServ Code Point field of the IP header is static.<a href="#section-2.1-4.4.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-4.4.1">This field contains the first 20 bytes of the IPv4 header. Fields that are not indicated as omitted will be
+included in the compressed packet and therefore their reference value is not relevant.<a href="#section-2.1-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-2.1-5">The IPv4 Flags field has the following format:<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<span id="name-ipv4-flags-format"></span><div id="fig-ipv4-flags">
+<figure id="figure-2">
+          <div class="alignLeft art-text artwork" id="section-2.1-6.1">
+<pre>
+IPv4 Flags {
+  Version-IHL (1),
+  DSCP-ECN (1),
+  Total Length (1),
+  Identification (1),
+  Flags-FragOffset (1),
+  TTL (1),
+  Protocol (1),
+  Checksum (1),
+  Source Address (1),
+  Destination Address (1),
+  Reserved (6),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-ipv4-flags-format" class="selfRef">IPv4 Flags Format</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.1-7">The flags have the following meanings:<a href="#section-2.1-7" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2.1-8">
+          <dt id="section-2.1-8.1">Version-IHL:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.2">
+            <p id="section-2.1-8.2.1">This flag indicates if byte 0 of the IPv4 header (Version and IHL fields) can be omitted.<a href="#section-2.1-8.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.5">ECN:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.6">
-            <p id="section-2.1-4.6.1">This flag indicates if the ECN codepoint field of the IP header is static.<a href="#section-2.1-4.6.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.3">DSCP-ECN:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.4">
+            <p id="section-2.1-8.4.1">This flag indicates if byte 1 of the IPv4 header (DSCP and ECN fields) can be omitted.<a href="#section-2.1-8.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.7">Total Length:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.8">
-            <p id="section-2.1-4.8.1">This flag indicates if the Total length field of the IP header is static.<a href="#section-2.1-4.8.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.5">Total Length:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.6">
+            <p id="section-2.1-8.6.1">This flag indicates if bytes 2-3 of the IPv4 header (Total Length field) can be omitted (receiver will compute from payload size).<a href="#section-2.1-8.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.9">ID:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.10">
-            <p id="section-2.1-4.10.1">This flag indicates if the Identification field of the IP header is static.<a href="#section-2.1-4.10.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.7">Identification:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.8">
+            <p id="section-2.1-8.8.1">This flag indicates if bytes 4-5 of the IPv4 header (Identification field) can be omitted.<a href="#section-2.1-8.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.11">Reserved:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.12">
-            <p id="section-2.1-4.12.1">This flag indicates if the Reserved flag of the IP header is static.<a href="#section-2.1-4.12.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.9">Flags-FragOffset:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.10">
+            <p id="section-2.1-8.10.1">This flag indicates if bytes 6-7 of the IPv4 header (Flags and Fragment Offset fields) can be omitted.<a href="#section-2.1-8.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.13">DF:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.14">
-            <p id="section-2.1-4.14.1">This flag indicates if the Don't Fragment flag of the IP header is static.<a href="#section-2.1-4.14.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.11">TTL:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.12">
+            <p id="section-2.1-8.12.1">This flag indicates if byte 8 of the IPv4 header (TTL field) can be omitted.<a href="#section-2.1-8.12.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.15">MF:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.16">
-            <p id="section-2.1-4.16.1">This flag indicates if the More Fragments flag of the IP header is static.<a href="#section-2.1-4.16.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.13">Protocol:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.14">
+            <p id="section-2.1-8.14.1">This flag indicates if byte 9 of the IPv4 header (Protocol field) can be omitted.<a href="#section-2.1-8.14.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.17">Fragment Offset:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.18">
-            <p id="section-2.1-4.18.1">This flag indicates if the Fragment Offset field of the IP header is static.<a href="#section-2.1-4.18.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.15">Checksum:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.16">
+            <p id="section-2.1-8.16.1">This flag indicates if bytes 10-11 of the IPv4 header (Header Checksum field) can be omitted (receiver will recompute).<a href="#section-2.1-8.16.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.19">TTL:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.20">
-            <p id="section-2.1-4.20.1">This flag indicates if the TTL field of the IP header is static.<a href="#section-2.1-4.20.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.17">Source Address:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.18">
+            <p id="section-2.1-8.18.1">This flag indicates if bytes 12-15 of the IPv4 header (Source Address field) can be omitted.<a href="#section-2.1-8.18.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.21">Protocol:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.22">
-            <p id="section-2.1-4.22.1">This flag indicates if the Protocol field of the IP header  is static.<a href="#section-2.1-4.22.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.19">Destination Address:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.20">
+            <p id="section-2.1-8.20.1">This flag indicates if bytes 16-19 of the IPv4 header (Destination Address field) can be omitted.<a href="#section-2.1-8.20.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-4.23">Checksum:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.24">
-            <p id="section-2.1-4.24.1">This flag indicates if the Checksum field of the IP header is static.<a href="#section-2.1-4.24.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-4.25">Source Address:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.26">
-            <p id="section-2.1-4.26.1">This flag indicates if the IP Source Address of the IP header is static.<a href="#section-2.1-4.26.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-4.27">Destination Address:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.28">
-            <p id="section-2.1-4.28.1">This flag indicates if the IP Destination Address of the IP header is static.<a href="#section-2.1-4.28.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-4.29">Source Port:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.30">
-            <p id="section-2.1-4.30.1">This flag indicates if the Source Port of the header that follows the IP header is static.<a href="#section-2.1-4.30.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-4.31">Destination Port:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.32">
-            <p id="section-2.1-4.32.1">This flag indicates if the Destination Port of the header that follows the IP header is static.<a href="#section-2.1-4.32.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-4.33">IPv4 Header:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.34">
-            <p id="section-2.1-4.34.1">This field contains the first 20 bytes of the IPv4 header. Fields that are not indicated as static will be omitted
-in the compression and therefore their value is not relevant.<a href="#section-2.1-4.34.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-4.35">Transport Ports:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.36">
-            <p id="section-2.1-4.36.1">If either the Source Port or Destination Port Flag is set, this field has to be present and contains
-one byte for the source port followed by one byte for the destionation port.<a href="#section-2.1-4.36.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-8.21">Reserved:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-8.22">
+            <p id="section-2.1-8.22.1">These bits are reserved for future use and <span class="bcp14">MUST</span> be set to zero.<a href="#section-2.1-8.22.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
 <span id="name-ipv6-compression-assign-cap"></span><div id="fig-capsule-ipv6-assign">
-<figure id="figure-2">
-          <div class="alignLeft art-text artwork" id="section-2.1-5.1">
+<figure id="figure-3">
+          <div class="alignLeft art-text artwork" id="section-2.1-9.1">
 <pre>
 IP6_COMPRESSION_ASSIGN Capsule {
   Type (i) = TBD,
   Length (i),
   Context ID (i),
-  Traffic class (1),
-  Flow label (1),
-  Payload Length (1),
-  Next header (1),
-  Hop limit (1),
-  Source Address (1),
-  Destination Address (1),
-  Source Port (1),
-  Destination Port (1),
-  IPv6 Header (40),
-  [Transport Ports (16)]
+  IPv6 Flags (16),
+  IPv6 Header (40)
 }
 </pre>
 </div>
-<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
 <a href="#name-ipv6-compression-assign-cap" class="selfRef">IPv6 Compression Assign Capsule Format</a>
           </figcaption></figure>
 </div>
-<p id="section-2.1-6">It contains the following fields:<a href="#section-2.1-6" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-2.1-7">
-          <dt id="section-2.1-7.1">Traffic Class:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.2">
-            <p id="section-2.1-7.2.1">This flag indicates if the Traffic Class field of the IP header is static.<a href="#section-2.1-7.2.1" class="pilcrow">¶</a></p>
+<p id="section-2.1-10">It contains the following fields:<a href="#section-2.1-10" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2.1-11">
+          <dt id="section-2.1-11.1">IPv6 Flags:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-11.2">
+            <p id="section-2.1-11.2.1">A 16-bit field containing flags that indicate which byte-aligned IP header fields can be omitted.
+The format is defined in <a href="#fig-ipv6-flags" class="auto internal xref">Figure 4</a>.<a href="#section-2.1-11.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-2.1-7.3">Flow Label:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.4">
-            <p id="section-2.1-7.4.1">This flag indicates if the Flow Label field of the IP header is static.<a href="#section-2.1-7.4.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.5">Payload Length:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.6">
-            <p id="section-2.1-7.6.1">This flag indicates if the Payload length field of the IP header is static.<a href="#section-2.1-7.6.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.7">Next Header:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.8">
-            <p id="section-2.1-7.8.1">This flag indicates if the value of the Next Header field of the IP header is static.<a href="#section-2.1-7.8.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.9">Hop Limit:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.10">
-            <p id="section-2.1-7.10.1">This flag indicates if the Hop Limit field of the IP header is static.<a href="#section-2.1-7.10.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.11">Source Address:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.12">
-            <p id="section-2.1-7.12.1">This flag indicates if the IP Source Address of the IP header is static.<a href="#section-2.1-7.12.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.13">Destination Address:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.14">
-            <p id="section-2.1-7.14.1">This flag indicates if the IP Destination Address of the IP header is static.<a href="#section-2.1-7.14.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.15">Source Port:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.16">
-            <p id="section-2.1-7.16.1">This flag indicates if the Source Port of the header that follows the IP header is static.<a href="#section-2.1-7.16.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.17">Destination Port:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.18">
-            <p id="section-2.1-7.18.1">This flag indicates if the Destination Port of the header that follows the IP header is static.<a href="#section-2.1-7.18.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.19">IPv6 Header:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.20">
-            <p id="section-2.1-7.20.1">This field contains the first 40 bytes of the IPv6 header. Fields that are not indicated as static will be omitted
-in the compression and therefore their value is not relevant.<a href="#section-2.1-7.20.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-2.1-7.21">Transport Ports:</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-7.22">
-            <p id="section-2.1-7.22.1">If either the Source Port or Destination Port Flag is set, this field has to be present and contains
-one byte for the source port followed by one byte for the destionation port.<a href="#section-2.1-7.22.1" class="pilcrow">¶</a></p>
+<dt id="section-2.1-11.3">IPv6 Header:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-11.4">
+            <p id="section-2.1-11.4.1">This field contains the first 40 bytes of the IPv6 header. Fields that are not indicated as omitted will be
+included in the compressed packet and therefore their reference value is not relevant.<a href="#section-2.1-11.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-2.1-8">When the indicated Context ID is used all IP header fields that indicated as static
-as well as the version field <span class="bcp14">MUST</span> be omitted in the HTTP datagram payload and the receiver of the
-datagram with the indicated Context ID <span class="bcp14">MUST</span> reconstruct the IP header accordingly before forwarding
-the payload.<a href="#section-2.1-8" class="pilcrow">¶</a></p>
-<p id="section-2.1-9">When an endpoint receives a IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN
-capsule, it <span class="bcp14">MUST</span> either accept or reject the corresponding registration:<a href="#section-2.1-9" class="pilcrow">¶</a></p>
+<p id="section-2.1-12">The IPv6 Flags field has the following format:<a href="#section-2.1-12" class="pilcrow">¶</a></p>
+<span id="name-ipv6-flags-format"></span><div id="fig-ipv6-flags">
+<figure id="figure-4">
+          <div class="alignLeft art-text artwork" id="section-2.1-13.1">
+<pre>
+IPv6 Flags {
+  Version-FL (1),
+  Traffic Class (1),
+  Payload Length (1),
+  Next Header (1),
+  Hop Limit (1),
+  Source Address (1),
+  Destination Address (1),
+  Reserved (9),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-ipv6-flags-format" class="selfRef">IPv6 Flags Format</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.1-14">The flags have the following meanings:<a href="#section-2.1-14" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2.1-15">
+          <dt id="section-2.1-15.1">Version-FL:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-15.2">
+            <p id="section-2.1-15.2.1">This flag indicates if the Version field (upper 4 bits of byte 0) and Flow Label field (lower 4 bits of byte 1, and all of bytes 2-3) can be omitted.
+When this flag is set but the Traffic Class flag is not set, the Traffic Class field (lower 4 bits of byte 0 and upper 4 bits of byte 1) <span class="bcp14">MUST</span> be preserved
+as a single byte in the compressed packet.<a href="#section-2.1-15.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-15.3">Traffic Class:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-15.4">
+            <p id="section-2.1-15.4.1">This flag indicates if the Traffic Class field (lower 4 bits of byte 0 and upper 4 bits of byte 1) can be omitted.
+This flag can be set independently of the Version-FL flag to allow omitting Version and Flow Label while preserving Traffic Class.<a href="#section-2.1-15.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-15.5">Payload Length:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-15.6">
+            <p id="section-2.1-15.6.1">This flag indicates if bytes 4-5 of the IPv6 header (Payload Length field) can be omitted (receiver will compute from payload size).<a href="#section-2.1-15.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-15.7">Next Header:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-15.8">
+            <p id="section-2.1-15.8.1">This flag indicates if byte 6 of the IPv6 header (Next Header field) can be omitted.<a href="#section-2.1-15.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-15.9">Hop Limit:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-15.10">
+            <p id="section-2.1-15.10.1">This flag indicates if byte 7 of the IPv6 header (Hop Limit field) can be omitted.<a href="#section-2.1-15.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-15.11">Source Address:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-15.12">
+            <p id="section-2.1-15.12.1">This flag indicates if bytes 8-23 of the IPv6 header (Source Address field) can be omitted.<a href="#section-2.1-15.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-15.13">Destination Address:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-15.14">
+            <p id="section-2.1-15.14.1">This flag indicates if bytes 24-39 of the IPv6 header (Destination Address field) can be omitted.<a href="#section-2.1-15.14.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-15.15">Reserved:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-15.16">
+            <p id="section-2.1-15.16.1">These bits are reserved for future use and <span class="bcp14">MUST</span> be set to zero.<a href="#section-2.1-15.16.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-2.1-16">When the indicated Context ID is used, all IP header fields that are flagged as omitted
+as well as the version field <span class="bcp14">MUST</span> be omitted from the HTTP datagram payload. The receiver of the
+datagram with the indicated Context ID <span class="bcp14">MUST</span> reconstruct the complete IP header using the reference
+values from the COMPRESSION_ASSIGN capsule and/or by computing derived values (such as checksums
+and length fields) before forwarding the payload.<a href="#section-2.1-16" class="pilcrow">¶</a></p>
+<p id="section-2.1-17">When an endpoint receives a IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN
+capsule, it <span class="bcp14">MUST</span> either accept or reject the corresponding registration:<a href="#section-2.1-17" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.1-10.1">
-            <p id="section-2.1-10.1.1">if it accepts the registration, the receiver <span class="bcp14">MUST</span> return a COMPRESSION_ACK
+<li class="normal" id="section-2.1-18.1">
+            <p id="section-2.1-18.1.1">if it accepts the registration, the receiver <span class="bcp14">MUST</span> return a COMPRESSION_ACK
 capsule with the Context ID set to the one from the received
-IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule back to its peer<a href="#section-2.1-10.1.1" class="pilcrow">¶</a></p>
+IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule back to its peer<a href="#section-2.1-18.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-2.1-10.2">
-            <p id="section-2.1-10.2.1">if it rejects the registration, the receiver <span class="bcp14">MUST</span> respond by sending a
+          <li class="normal" id="section-2.1-18.2">
+            <p id="section-2.1-18.2.1">if it rejects the registration, the receiver <span class="bcp14">MUST</span> respond by sending a
 COMPRESSION_CLOSE capsule with the Context ID set to the one from the
-received IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule.<a href="#section-2.1-10.2.1" class="pilcrow">¶</a></p>
+received IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule.<a href="#section-2.1-18.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-2.1-11">As mandated in <span><a href="https://rfc-editor.org/rfc/rfc9298#section-4" class="relref">Section 4</a> of [<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span>, clients can only allocate even
+<p id="section-2.1-19">As mandated in <span><a href="https://rfc-editor.org/rfc/rfc9298#section-4" class="relref">Section 4</a> of [<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span>, clients can only allocate even
 Context IDs, while proxies can only allocate odd ones. This makes the
 registration capsules from this document unambiguous. For example, if a
 client receives a COMPRESSION_ASSIGN capsule with an even Context ID, that
 has to be an echo of a capsule that the client initially sent, indicating
 that the proxy accepted the registration. Since the value 0 was reserved by
 unextended connect-udp, the Context ID value of COMPRESSION_ASSIGN can never
-be zero.<a href="#section-2.1-11" class="pilcrow">¶</a></p>
-<p id="section-2.1-12">Endpoints <span class="bcp14">MUST NOT</span> send two COMPRESSION_ASSIGN capsules with the same
+be zero.<a href="#section-2.1-19" class="pilcrow">¶</a></p>
+<p id="section-2.1-20">Endpoints <span class="bcp14">MUST NOT</span> send two COMPRESSION_ASSIGN capsules with the same
 Context ID. If a recipient detects a repeated Context ID, it <span class="bcp14">MUST</span> treat the
 capsule as malformed. Receipt of a malformed capsule <span class="bcp14">MUST</span> be treated as an
-error processing the Capsule Protocol, as defined in <span><a href="https://rfc-editor.org/rfc/rfc9297#section-3.3" class="relref">Section 3.3</a> of [<a href="#HTTP-DGRAM" class="cite xref">HTTP-DGRAM</a>]</span>.<a href="#section-2.1-12" class="pilcrow">¶</a></p>
-<p id="section-2.1-13">Endpoints <span class="bcp14">MAY</span> pre-emptively use Context IDs not yet acknowledged by the peer
+error processing the Capsule Protocol, as defined in <span><a href="https://rfc-editor.org/rfc/rfc9297#section-3.3" class="relref">Section 3.3</a> of [<a href="#HTTP-DGRAM" class="cite xref">HTTP-DGRAM</a>]</span>.<a href="#section-2.1-20" class="pilcrow">¶</a></p>
+<p id="section-2.1-21">Endpoints <span class="bcp14">MAY</span> pre-emptively use Context IDs not yet acknowledged by the peer
 via COMPRESSION_ACK, knowing that those HTTP Datagrams can be dropped if
 they arrive before the corresponding IP4_COMPRESSION_ASSIGN or IP6_COMPRESSION_ASSIGN capsule,
-or if the peer rejects the registration.<a href="#section-2.1-13" class="pilcrow">¶</a></p>
+or if the peer rejects the registration.<a href="#section-2.1-21" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="capsule-ack">
@@ -1484,7 +1483,7 @@ or if the peer rejects the registration.<a href="#section-2.1-13" class="pilcrow
 registration of a context ID that was received in an IP4_COMPRESSION_ASSIGN
 or IP6_COMPRESSION_ASSIGN capsule.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <span id="name-ip-compression-acknowledgme"></span><div id="fig-capsule-ack">
-<figure id="figure-3">
+<figure id="figure-5">
           <div class="alignLeft art-text artwork" id="section-2.2-2.1">
 <pre>
 IP_COMPRESSION_ACK Capsule {
@@ -1494,7 +1493,7 @@ IP_COMPRESSION_ACK Capsule {
 }
 </pre>
 </div>
-<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
 <a href="#name-ip-compression-acknowledgme" class="selfRef">IP Compression Acknowledgment Capsule Format</a>
           </figcaption></figure>
 </div>
@@ -1516,7 +1515,7 @@ IP6_COMPRESSION_ASSIGN capsule capsule, to indicate that the registration
 was rejected. It can also be sent later to indicate the closure of a
 previously assigned registration.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
 <span id="name-ip-compression-close-capsul"></span><div id="fig-capsule-close">
-<figure id="figure-4">
+<figure id="figure-6">
           <div class="alignLeft art-text artwork" id="section-2.3-2.1">
 <pre>
 IP_COMPRESSION_CLOSE Capsule {
@@ -1526,7 +1525,7 @@ IP_COMPRESSION_CLOSE Capsule {
 }
 </pre>
 </div>
-<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
 <a href="#name-ip-compression-close-capsul" class="selfRef">IP Compression Close Capsule Format</a>
           </figcaption></figure>
 </div>
