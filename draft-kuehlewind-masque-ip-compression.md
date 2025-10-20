@@ -58,6 +58,9 @@ This document defines four new capsules to assign new context IDs and provide st
 in IPv4 and IPv6 headers, acknowlegde the use of such a context ID, or cancel its use.
 The capsules MUST only be used with Connect-IP {{CONNECT-IP}}.
 
+Extending this work to include compression of transport layer fields like the port numbers
+in TCP or UDP is left for consideration for further revisions.
+
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
