@@ -74,8 +74,7 @@ IP4_COMPRESSION_ASSIGN Capsule {
   Length (i),
   Context ID (i),
   IPv4 Flags (16),
-  IPv4 Header (20),
-  [Transport Ports (32)]
+  IPv4 Header (20)
 }
 ~~~
 {: #fig-capsule-ipv4-assign title="IPv4 Compression Assign Capsule Format"}
@@ -83,90 +82,66 @@ IP4_COMPRESSION_ASSIGN Capsule {
 It contains the following fields:
 
 IPv4 Flags:
-: A 16-bit field containing flags that indicate which IP header fields can be omitted.
+: A 16-bit field containing flags that indicate which byte-aligned IP header fields can be omitted.
   The format is defined in {{fig-ipv4-flags}}.
 
 IPv4 Header:
 : This field contains the first 20 bytes of the IPv4 header. Fields that are not indicated as omitted will be
   included in the compressed packet and therefore their reference value is not relevant.
 
-Transport Ports:
-: If either the Source Port or Destination Port Flag is set, this field has to be present and contains
-  two bytes for the source port followed by two bytes for the destination port.
-
 The IPv4 Flags field has the following format:
 
 ~~~
 IPv4 Flags {
-  IHL (1),
-  DSCP (1),
-  ECN (1),
-  ID (1),
+  Version-IHL (1),
+  DSCP-ECN (1),
   Total Length (1),
-  Reserved (1),
-  DF (1),
-  MF (1),
-  Fragment Offset (1),
+  Identification (1),
+  Flags-FragOffset (1),
   TTL (1),
   Protocol (1),
   Checksum (1),
   Source Address (1),
   Destination Address (1),
-  Source Port (1),
-  Destination Port (1),
+  Reserved (6),
 }
 ~~~
 {: #fig-ipv4-flags title="IPv4 Flags Format"}
 
 The flags have the following meanings:
 
-IHL:
-: This flag indicates if the Internet Header Length field can be omitted.
+Version-IHL:
+: This flag indicates if byte 0 of the IPv4 header (Version and IHL fields) can be omitted.
 
-DSCP:
-: This flag indicates if the DiffServ Code Point field can be omitted.
-
-ECN:
-: This flag indicates if the ECN codepoint field can be omitted.
+DSCP-ECN:
+: This flag indicates if byte 1 of the IPv4 header (DSCP and ECN fields) can be omitted.
 
 Total Length:
-: This flag indicates if the Total length field can be omitted (receiver will compute from payload size).
+: This flag indicates if bytes 2-3 of the IPv4 header (Total Length field) can be omitted (receiver will compute from payload size).
 
-ID:
-: This flag indicates if the Identification field can be omitted.
+Identification:
+: This flag indicates if bytes 4-5 of the IPv4 header (Identification field) can be omitted.
 
-Reserved:
-: This flag indicates if the Reserved flag can be omitted.
-
-DF:
-: This flag indicates if the Don't Fragment flag can be omitted.
-
-MF:
-: This flag indicates if the More Fragments flag can be omitted.
-
-Fragment Offset:
-: This flag indicates if the Fragment Offset field can be omitted.
+Flags-FragOffset:
+: This flag indicates if bytes 6-7 of the IPv4 header (Flags and Fragment Offset fields) can be omitted.
 
 TTL:
-: This flag indicates if the TTL field can be omitted.
+: This flag indicates if byte 8 of the IPv4 header (TTL field) can be omitted.
 
 Protocol:
-: This flag indicates if the Protocol field can be omitted.
+: This flag indicates if byte 9 of the IPv4 header (Protocol field) can be omitted.
 
 Checksum:
-: This flag indicates if the Checksum field can be omitted (receiver will recompute).
+: This flag indicates if bytes 10-11 of the IPv4 header (Header Checksum field) can be omitted (receiver will recompute).
 
 Source Address:
-: This flag indicates if the IP Source Address can be omitted.
+: This flag indicates if bytes 12-15 of the IPv4 header (Source Address field) can be omitted.
 
 Destination Address:
-: This flag indicates if the IP Destination Address can be omitted.
+: This flag indicates if bytes 16-19 of the IPv4 header (Destination Address field) can be omitted.
 
-Source Port:
-: This flag indicates if the Source Port of the transport header can be omitted.
-
-Destination Port:
-: This flag indicates if the Destination Port of the transport header can be omitted.
+Reserved:
+: These bits are reserved for future use and MUST be set to zero.
 
 ~~~
 IP6_COMPRESSION_ASSIGN Capsule {
@@ -174,8 +149,7 @@ IP6_COMPRESSION_ASSIGN Capsule {
   Length (i),
   Context ID (i),
   IPv6 Flags (16),
-  IPv6 Header (40),
-  [Transport Ports (32)]
+  IPv6 Header (40)
 }
 ~~~
 {: #fig-capsule-ipv6-assign title="IPv6 Compression Assign Capsule Format"}
@@ -183,63 +157,54 @@ IP6_COMPRESSION_ASSIGN Capsule {
 It contains the following fields:
 
 IPv6 Flags:
-: A 16-bit field containing flags that indicate which IP header fields can be omitted.
+: A 16-bit field containing flags that indicate which byte-aligned IP header fields can be omitted.
   The format is defined in {{fig-ipv6-flags}}.
 
 IPv6 Header:
 : This field contains the first 40 bytes of the IPv6 header. Fields that are not indicated as omitted will be
   included in the compressed packet and therefore their reference value is not relevant.
 
-Transport Ports:
-: If either the Source Port or Destination Port Flag is set, this field has to be present and contains
-  two bytes for the source port followed by two bytes for the destination port.
-
 The IPv6 Flags field has the following format:
 
 ~~~
 IPv6 Flags {
+  Version-FL (1),
   Traffic Class (1),
-  Flow Label (1),
   Payload Length (1),
   Next Header (1),
   Hop Limit (1),
   Source Address (1),
   Destination Address (1),
-  Source Port (1),
-  Destination Port (1),
-  Reserved (7),
+  Reserved (9),
 }
 ~~~
 {: #fig-ipv6-flags title="IPv6 Flags Format"}
 
 The flags have the following meanings:
 
-Traffic Class:
-: This flag indicates if the Traffic Class field can be omitted.
+Version-FL:
+: This flag indicates if the Version field (upper 4 bits of byte 0) and Flow Label field (lower 4 bits of byte 1, and all of bytes 2-3) can be omitted.
+  When this flag is set but the Traffic Class flag is not set, the Traffic Class field (lower 4 bits of byte 0 and upper 4 bits of byte 1) MUST be preserved
+  as a single byte in the compressed packet.
 
-Flow Label:
-: This flag indicates if the Flow Label field can be omitted.
+Traffic Class:
+: This flag indicates if the Traffic Class field (lower 4 bits of byte 0 and upper 4 bits of byte 1) can be omitted.
+  This flag can be set independently of the Version-FL flag to allow omitting Version and Flow Label while preserving Traffic Class.
 
 Payload Length:
-: This flag indicates if the Payload length field can be omitted (receiver will compute from payload size).
+: This flag indicates if bytes 4-5 of the IPv6 header (Payload Length field) can be omitted (receiver will compute from payload size).
 
 Next Header:
-: This flag indicates if the Next Header field can be omitted.
+: This flag indicates if byte 6 of the IPv6 header (Next Header field) can be omitted.
 
 Hop Limit:
-: This flag indicates if the Hop Limit field can be omitted.
+: This flag indicates if byte 7 of the IPv6 header (Hop Limit field) can be omitted.
 
 Source Address:
-: This flag indicates if the IP Source Address can be omitted.
+: This flag indicates if bytes 8-23 of the IPv6 header (Source Address field) can be omitted.
 
 Destination Address:
-: This flag indicates if the IP Destination Address can be omitted.
-
-Source Port:
-: This flag indicates if the Source Port of the transport header can be omitted.
-
-Destination Port:
-: This flag indicates if the Destination Port of the transport header can be omitted.
+: This flag indicates if bytes 24-39 of the IPv6 header (Destination Address field) can be omitted.
 
 Reserved:
 : These bits are reserved for future use and MUST be set to zero.
