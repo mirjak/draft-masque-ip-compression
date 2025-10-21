@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-19T02:05:47.329254+00:00",
+  "timestamp": "2025-10-21T01:56:15.823079+00:00",
   "repo": "mirjak/draft-masque-ip-compression",
   "labels": [
     {
@@ -78,6 +78,83 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOQBkb9c6upBL9",
+      "title": "Make flags byte-aligned and change static terminology",
+      "url": "https://github.com/mirjak/draft-masque-ip-compression/pull/2",
+      "state": "MERGED",
+      "author": "ihlar",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The flags fields are now byte-aligned and named. Changed terminology from static, since some of the fields are not static but can be computed by the other end.",
+      "createdAt": "2025-10-20T14:11:32Z",
+      "updatedAt": "2025-10-20T17:19:40Z",
+      "baseRepository": "mirjak/draft-masque-ip-compression",
+      "baseRefName": "main",
+      "baseRefOid": "13f7c77e53f958a93b8d104c28920fe3b9750a7d",
+      "headRepository": "mirjak/draft-masque-ip-compression",
+      "headRefName": "ip-fields",
+      "headRefOid": "86510acd59974a644e22f71548eccc0fd3058fe7",
+      "closedAt": "2025-10-20T17:19:40Z",
+      "mergedAt": "2025-10-20T17:19:40Z",
+      "mergedBy": "mirjak",
+      "mergeCommit": {
+        "oid": "458b036e4fa5a52ca7c4726f5ab942f7dbf40490"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOQBkb9c6urTGz",
+      "title": "Add note on extending work to transport layer compression",
+      "url": "https://github.com/mirjak/draft-masque-ip-compression/pull/3",
+      "state": "MERGED",
+      "author": "mirjak",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-10-20T17:23:54Z",
+      "updatedAt": "2025-10-20T17:27:28Z",
+      "baseRepository": "mirjak/draft-masque-ip-compression",
+      "baseRefName": "main",
+      "baseRefOid": "458b036e4fa5a52ca7c4726f5ab942f7dbf40490",
+      "headRepository": "mirjak/draft-masque-ip-compression",
+      "headRefName": "mirjak-patch-2",
+      "headRefOid": "cedb5133a5f2b6c84545aa4cec10a888287cdc1b",
+      "closedAt": "2025-10-20T17:27:28Z",
+      "mergedAt": "2025-10-20T17:27:27Z",
+      "mergedBy": "mirjak",
+      "mergeCommit": {
+        "oid": "ce1a6fc41a4165b02de8a96a4eb0034acab5f7ed"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOQBkb9c7IHOGi",
+          "commit": {
+            "abbreviatedOid": "4001269"
+          },
+          "author": "mirjak",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-20T17:26:52Z",
+          "updatedAt": "2025-10-20T17:26:53Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "```suggestion\r\nExtending this work to include compression of transport layer fields like the port numbers\r\n```",
+              "createdAt": "2025-10-20T17:26:53Z",
+              "updatedAt": "2025-10-20T17:26:53Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
